@@ -1,0 +1,27 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+version = '1.0'
+
+// Uses JDK 7
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+
+// 1. Get dependencies from Maven local repository
+// 2. Get dependencies from Maven central repository
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+//Project dependencies
+dependencies {
+	
+	compile 'mysql:mysql-connector-java:5.1.35'
+	compile 'log4j:log4j:1.2.17'
+	compile 'org.apache.httpcomponents:httpclient:4.4.1'
+	compile 'org.jsoup:jsoup:1.8.2'
+	
+	
+}

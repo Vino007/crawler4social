@@ -5,8 +5,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Properties;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -14,7 +19,43 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Driver;
+import com.mysql.jdbc.PreparedStatement;
+
 public class DataPersistence {
+	private String url=null;
+	private String username=null;
+	private String password=null;
+	 public DataPersistence(){
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e2) {
+			System.out.println("ÕÒ²»µ½Çý¶¯");
+			
+		}
+		Properties prop=new Properties();
+		InputStream in=DataPersistence.class.getResourceAsStream("/database.properties");
+		
+		try {
+			prop.load(in);
+			url=prop.getProperty("url");
+			password=prop.getProperty("password");
+			username=prop.getProperty("username");
+			
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}finally{
+			try {
+				in.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
 	public static void saveFile(String path, String content) throws IOException {
 		File dir=new File(path.substring(0,path.lastIndexOf("\\")));
 		
@@ -66,5 +107,86 @@ public class DataPersistence {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public void saveInDatabase(String website,String time,String nickname,String content,String href){
+		
+		Connection con=null;
+		PreparedStatement statement=null;
+		String sql=null;
+	
+		try {
+		
+		   con=(Connection) DriverManager.getConnection(url, username, password);
+		   sql="insert into social values(null,?,?,?,?,?)";
+		   statement=(PreparedStatement) con.prepareStatement(sql);
+		   statement.setString(1, website);
+		   statement.setString(2, time);
+		   statement.setString(3,nickname);
+		   statement.setString(4, content);
+		   statement.setString(5, href);
+		   statement.execute();
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+		}finally{
+			if(statement!=null){
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					
+					e.printStackTrace();
+				}
+			}
+			if(con!=null)
+				try {
+					con.close();
+				} catch (SQLException e) {
+				
+					e.printStackTrace();
+				}
+			
+		}
+		
+	}
+	
+	public boolean queryInDatabase(String sql){
+
+		Connection con=null;
+		PreparedStatement statement=null;
+			
+		try {
+		
+		   con=(Connection) DriverManager.getConnection(url, username, password);
+		   
+		   statement=(PreparedStatement) con.prepareStatement(sql);
+
+		   ResultSet result=statement.executeQuery();
+		   if(result.next())
+			   return true;
+		   else 
+			   return false;
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+		}finally{
+			if(statement!=null){
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(con!=null)
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			
+		}
+		return true;
 	}
 }

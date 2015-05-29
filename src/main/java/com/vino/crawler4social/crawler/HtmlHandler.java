@@ -19,16 +19,23 @@ public class HtmlHandler {
 			String saveDir) {
 		if (html != null) {
 			Document document = Jsoup.parse(html);
-
+			log.info("处理知乎");
 			Elements eles = document
 					.select("div.zm-profile-section-main.zm-profile-section-activity-main.zm-profile-activity-page-item-main");
 
 			String content = null;
+			String href = null;
 			for (Element ele : eles) {
 				content = ele.text();
-				if (!lastContent.contains(content)) {
-					lastContent.add(content);
-					log.info(content + "     ");
+				href = "www.zhihu.com" + ele.child(1).attr("href");
+
+				DataPersistence dataPersistence = new DataPersistence();
+				if (!dataPersistence
+						.queryInDatabase("select id from social where content="
+								+ "'" + content + "'")) {
+					dataPersistence.saveInDatabase("zhihu",
+							new Date().toString(), "vino", content, href);
+					log.info(content);
 					try {
 						DataPersistence.saveFile(saveDir + "log.txt",
 								(new Date()) + content);
@@ -41,6 +48,7 @@ public class HtmlHandler {
 			}
 
 		}
+
 	}
 
 	public static void weiboHandler(String html, List<String> lastContent,
@@ -52,7 +60,7 @@ public class HtmlHandler {
 			Elements eles = document.select("span.ctt");
 			Elements cmts = document.select("span.cmt");// 转发
 			String content = null;
-			//处理原创
+			// 处理原创
 			for (Element ele : eles) {
 				content = ele.text();
 				if (!lastContent.contains(content)) {
@@ -68,7 +76,7 @@ public class HtmlHandler {
 				}
 
 			}
-			//处理转发
+			// 处理转发
 			for (Element cmt : cmts) {
 				content = cmt.text();
 				if (!lastContent.contains(content)) {
@@ -87,20 +95,30 @@ public class HtmlHandler {
 
 		}
 	}
-	
+
 	public static void jianshuHandler(String html, List<String> lastContent,
-			String saveDir){
+			String saveDir) {
 		if (html != null) {
 			Document document = Jsoup.parse(html);
-
+			log.info("处理简书");
 			Elements eles = document.select("ul.timeline-content>li");
-			
+
 			String content = null;
-			//处理原创
+			String href = null;
+			String nickname = null;
 			for (Element ele : eles) {
 				content = ele.text();
-				if (!lastContent.contains(content)) {
-					lastContent.add(content);
+				if (ele.child(1).child(1).children().size() != 0)
+					href = "www.jianshu.com"
+							+ ele.child(1).child(1).child(0).attr("href");
+				nickname = ele.child(1).child(0).text();
+				log.info(nickname + href);
+				DataPersistence dataPersistence = new DataPersistence();
+				if (!dataPersistence
+						.queryInDatabase("select id from social where content="
+								+ "'" + content + "'")) {
+					dataPersistence.saveInDatabase("jianshu",
+							new Date().toString(), nickname, content, href);
 					log.info(content + "     ");
 					try {
 						DataPersistence.saveFile(saveDir + "log.txt",
@@ -112,6 +130,29 @@ public class HtmlHandler {
 				}
 
 			}
+		}
 	}
-}
+
+	public static void doubanHandler(String html, List<String> lastContent,
+			String saveDir) {
+		if (html != null) {
+			Document document = Jsoup.parse(html);
+			System.out.println(html);
+			Elements eles = document.select("ul.timeline-content>li");
+
+			String content = null;
+			// 处理原创
+			/*
+			 * for (Element ele : eles) { content = ele.text(); if
+			 * (!lastContent.contains(content)) { lastContent.add(content);
+			 * log.info(content + "     "); try {
+			 * DataPersistence.saveFile(saveDir + "log.txt", (new Date()) +
+			 * content); } catch (IOException e) {
+			 * 
+			 * e.printStackTrace(); } }
+			 * 
+			 * }
+			 */
+		}
+	}
 }

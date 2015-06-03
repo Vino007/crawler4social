@@ -14,31 +14,34 @@ public class MessageNotice {
 	private String password;
 	private String fromMail;
 	private String toMail;
-	public MessageNotice(){
-	
+
+	public MessageNotice() {
+
 	}
-	
-	public void prepareMail(){
-		Properties prop=new Properties();
-	
-		try(InputStream in=MessageNotice.class.getResourceAsStream("/mail.properties")){
+
+	public void prepareMail() {
+		Properties prop = new Properties();
+
+		try (InputStream in = MessageNotice.class
+				.getResourceAsStream("/mail.properties")) {
 			prop.load(in);
-			host=prop.getProperty("host");
-			password=prop.getProperty("password");
-			username=prop.getProperty("username");
-			fromMail=username;
-			toMail=prop.getProperty("toMail");
-			mailUtils=new JavaMailUtils();
+			host = prop.getProperty("host");
+			password = prop.getProperty("password");
+			username = prop.getProperty("username");
+			fromMail = username;
+			toMail = prop.getProperty("toMail");
+			mailUtils = new JavaMailUtils();
 			mailUtils.setHost(host);
 			mailUtils.setAccount(username, password);
-			System.out.println(toMail);
+			
 		} catch (IOException e) {
 			System.out.println("¼ÓÔØmail.properties³ö´í");
 			e.printStackTrace();
 		}
-		
+
 	}
-	public void send(String subject,String content){
+
+	public void send(String subject, String content) {
 		prepareMail();
 		try {
 			mailUtils.send(fromMail, toMail, subject, content);
@@ -47,5 +50,5 @@ public class MessageNotice {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

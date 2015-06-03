@@ -3,16 +3,11 @@ package com.vino.crawler4social.crawler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import com.vino.crawler4social.datapersistence.DataPersistence;
 import com.vino.crawler4social.network.DataObtain;
 
 /**
@@ -52,13 +47,18 @@ public class Crawler {
 				HtmlHandler.zhihuHandler(html, lastContent, saveDir);
 				break;
 			case 1:
-				HtmlHandler.jianshuHandler(html, lastContent, saveDir);				
-				break;		
-			 case 2:
-				WeiboCrawler crawler=new WeiboCrawler();
-				html=crawler.getHtml(urls.get((urlIndex)));
-				HtmlHandler.weiboHandler(html,lastContent,saveDir);
-				break;			
+				HtmlHandler.jianshuHandler(html, lastContent, saveDir);
+				break;
+			case 2:
+				WeiboCrawler crawler = new WeiboCrawler();
+				html = crawler.getHtml(urls.get((urlIndex)));
+				try{
+				HtmlHandler.weiboHandler(html, lastContent, saveDir);
+				}catch(Exception e){
+					e.printStackTrace();
+					log.error("微博爬虫无法使用");
+				}				
+				break;
 			default:
 				break;
 			}

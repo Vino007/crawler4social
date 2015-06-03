@@ -34,7 +34,7 @@ public class HtmlHandler {
 					dataPersistence.saveInDatabase("zhihu",
 							new Date().toString(), "vino", content, href);
 					log.info(content);
-				//	messageNotice.send("知乎更新了一条状态", content);
+					messageNotice.send("知乎更新了一条状态", content);
 					try {
 						DataPersistence.saveFile(saveDir + "log.txt",
 								(new Date()) + content);
@@ -70,11 +70,17 @@ public class HtmlHandler {
 			Elements nickname = document.select("div.ut>span.ctt");
 			String content = null;
 			DataPersistence dataPersistence = new DataPersistence();
-			String pagetext = pagelist.get(0).text().toString();
+			String pagetext=null;
+			String totalPage=null;
 			String timeAndDeviceText = null;// 微博发出时间和使用设备
-			String totalPage = pagetext.substring(
-					pagetext.lastIndexOf("/") + 1, pagetext.lastIndexOf("页"));
-			String nicknameText = nickname.get(0).text().toString();
+			String nicknameText=null;
+			if(pagelist.size()>0){
+			pagetext = pagelist.get(0).text().toString();
+			totalPage = pagetext.substring(
+			pagetext.lastIndexOf("/") + 1, pagetext.lastIndexOf("页"));
+			}
+			if(nickname.size()>0)
+			nicknameText = nickname.get(0).text().toString();
 		
 			// 处理原创
 			for (int i = 0; i < eles.size() - 2; i++) {
@@ -86,7 +92,7 @@ public class HtmlHandler {
 					dataPersistence.saveInDatabase("weibo",
 							new Date().toString(), nicknameText, content, null);
 					log.info("更新一条状态：" + content);
-				//	messageNotice.send(nicknameText+"微博更新了一条状态", content);
+					messageNotice.send(nicknameText+"微博更新了一条状态", content);
 				}
 				try {
 					DataPersistence.saveFile(saveDir + "log.txt", (new Date())
@@ -121,7 +127,7 @@ public class HtmlHandler {
 					dataPersistence.saveInDatabase("jianshu",
 							new Date().toString(), nickname, content, href);
 					log.info(nickname+"更新状态"+content);
-				//	messageNotice.send(nickname+"简书更新了一条状态", content);
+					messageNotice.send(nickname+"简书更新了一条状态", content);
 					try {
 						DataPersistence.saveFile(saveDir + "log.txt",
 								(new Date()) + content);

@@ -2,8 +2,9 @@
 ##功能说明
 本程序实现监控知乎，简书等社交网络的账号状态更新的功能，一旦有状态更新则会发邮件通知.
 ##使用说明
-`crawler.properties`文件定义了爬虫需要抓取的网页，可在相应的url处改为自己需要抓取的url
-`database.properties` 文件定义了Mysql数据库的信息
+* `crawler.properties`文件定义了爬虫需要抓取的网页，可在相应的url处改为自己需要抓取的url，saveDir表示日志文件存储的路径
+* `database.properties` 文件定义了Mysql数据库的信息
+数据库的sql脚本如下：
 ```
 CREATE DATABASE  IF NOT EXISTS `crawler4social` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `crawler4social`;
@@ -64,3 +65,4 @@ UNLOCK TABLES;
 -- Dump completed on 2015-05-29 20:17:39
 
 ```
+

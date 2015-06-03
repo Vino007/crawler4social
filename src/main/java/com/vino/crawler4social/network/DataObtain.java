@@ -108,7 +108,7 @@ public static String getHTMLByPOST(String url) {
 		HttpPost httpPost=new HttpPost(url);
 		//Î±×°³Éä¯ÀÀÆ÷
 		httpPost.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0");
-		httpPost.addHeader("Cookies","_T_WM=85bd9caa7d7cac6a70d83c526eb3f7a7; "
+		httpPost.addHeader("Cookie","_T_WM=85bd9caa7d7cac6a70d83c526eb3f7a7; "
 				+ "SUB=_2A254YpjmDeTxGeRO7FAU8ivJwz6IHXVbrDiurDV6PUJbrdANLXTDkW1FkTb2ex3VQdOERcPd5h0v_2RdlA..; gsid_CTandWM=4ujud6991EBMl0QkoDOQH8H9P9o");
 		List<NameValuePair> nvps=new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("form_email", "540134090@qq.com"));

@@ -50,22 +50,35 @@ public class HtmlHandler {
 		}
 
 	}
-
+	//微博主页地址:http://weibo.cn/u/2360059850?page=3&vt=4&PHPSESSID=
 	public static void weiboHandler(String html, List<String> lastContent,
 			String saveDir) {
-
+		log.info("处理微博");
 		if (html != null) {
 			Document document = Jsoup.parse(html);
 
-			Elements eles = document.select("span.ctt");
-			Elements cmts = document.select("span.cmt");// 转发
+			Elements eles = document.select("div.c");//原创"span.ctt"
+		//	Elements cmts = document.select("span.cmt");// 转发
+			Elements pagelist=document.select("div#pagelist>form>div");
+			Elements timeAndDevice=document.select("span.ct");
 			String content = null;
+			String href = null;
+		
+			DataPersistence dataPersistence = new DataPersistence();
+			String pagetext=pagelist.get(0).text().toString();
+			
+			String timeAndDeviceText=null;//微博发出时间和使用设备
+			String totalPage=pagetext.substring(pagetext.lastIndexOf("/")+1, pagetext.lastIndexOf("页"));			
+			log.info(totalPage);
 			// 处理原创
-			for (Element ele : eles) {
-				content = ele.text();
-				if (!lastContent.contains(content)) {
-					lastContent.add(content);
-					log.info(content + "     ");
+			for (int i=0;i<eles.size()-2;i++) {
+				content = eles.get(i).text();
+				timeAndDeviceText=timeAndDevice.get(i).text();
+				//href = "www.weibo.cn" + ele.child(1).attr("href");
+			//	dataPersistence.saveInDatabase("weibo",
+			//			new Date().toString(), "vino", content, href);
+				log.info(content);
+				log.info(timeAndDeviceText);
 					try {
 						DataPersistence.saveFile(saveDir + "log.txt",
 								(new Date()) + content);
@@ -75,8 +88,8 @@ public class HtmlHandler {
 					}
 				}
 
-			}
-			// 处理转发
+			
+	/*		// 处理转发
 			for (Element cmt : cmts) {
 				content = cmt.text();
 				if (!lastContent.contains(content)) {
@@ -91,7 +104,7 @@ public class HtmlHandler {
 					}
 				}
 
-			}
+			}*/
 
 		}
 	}

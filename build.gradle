@@ -22,6 +22,7 @@ dependencies {
 	compile 'log4j:log4j:1.2.17'
 	compile 'org.apache.httpcomponents:httpclient:4.4.1'
 	compile 'org.jsoup:jsoup:1.8.2'
+	compile 'org.seleniumhq.selenium:selenium-java:2.45.0'
 	
 	
 }

@@ -41,7 +41,7 @@ public class Crawler {
 
 		urls.add(prop.getProperty("zhihuUrl"));
 		urls.add(prop.getProperty("jianshuUrl"));
-
+		urls.add(prop.getProperty("weiboUrl"));
 		saveDir = prop.getProperty("saveDir");
 
 		int urlIndex = 0;
@@ -52,14 +52,13 @@ public class Crawler {
 				HtmlHandler.zhihuHandler(html, lastContent, saveDir);
 				break;
 			case 1:
-				HtmlHandler.jianshuHandler(html, lastContent, saveDir);
-				
-				break;
-			/*
-			 * case 2:
-			 * html=DataObtain.getHTMLByPOST("http://www.douban.com/accounts/login"
-			 * ); HtmlHandler.doubanHandler(html,lastContent,saveDir);break;
-			 */
+				HtmlHandler.jianshuHandler(html, lastContent, saveDir);				
+				break;		
+			 case 2:
+				WeiboCrawler crawler=new WeiboCrawler();
+				html=crawler.getHtml();
+				HtmlHandler.weiboHandler(html,lastContent,saveDir);
+				break;			
 			default:
 				break;
 			}

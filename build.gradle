@@ -23,6 +23,6 @@ dependencies {
 	compile 'org.apache.httpcomponents:httpclient:4.4.1'
 	compile 'org.jsoup:jsoup:1.8.2'
 	compile 'org.seleniumhq.selenium:selenium-java:2.45.0'
-	
+	compile 'com.sun.mail:javax.mail:1.5.3'
 	
 }

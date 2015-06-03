@@ -34,7 +34,7 @@ public class WeiboCrawler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		 System.out.println(cookie);
+		// System.out.println(cookie);
 		 RequestConfig requestConfig=RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD_STRICT).build();
 		 clients=HttpClients.custom().setDefaultRequestConfig(requestConfig).build();
 		 
@@ -52,7 +52,7 @@ public class WeiboCrawler {
 			if(entity!=null)
 				try {
 					html=EntityUtils.toString(entity);
-					log.info(html);
+			
 					EntityUtils.consume(entity);
 				} catch (ParseException | IOException e) {
 					

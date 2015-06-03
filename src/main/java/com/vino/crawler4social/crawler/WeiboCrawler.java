@@ -16,7 +16,11 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
-
+/**
+ * 
+ * @author Joker
+ *
+ */
 public class WeiboCrawler {
 	private static final Logger log = Logger.getLogger(WeiboCrawler.class);
 
@@ -35,9 +39,9 @@ public class WeiboCrawler {
 		 clients=HttpClients.custom().setDefaultRequestConfig(requestConfig).build();
 		 
 	}
-	public  String getHtml() {
+	public  String getHtml(String url) {
 		String html=null;
-		httpGet=new HttpGet("http://weibo.cn/2072525582/profile?vt=4&PHPSESSID=");
+		httpGet=new HttpGet(url);
 		httpGet.addHeader(new BasicHeader("Cookie", cookie));
 		CloseableHttpResponse response=null;
 		try {
@@ -84,7 +88,7 @@ public class WeiboCrawler {
 		}
 		
 			log.info("开始获取html");
-			crawler.getHtml();
+			//crawler.getHtml();
 			log.info("结束");
 		
 	}

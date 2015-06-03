@@ -150,8 +150,8 @@ public class DataPersistence {
 		
 	}
 	
-	public boolean queryInDatabase(String sql){
-
+	public boolean queryInDatabaseByContent(String content){
+		String sql="select id from social where content=?";
 		Connection con=null;
 		PreparedStatement statement=null;
 			
@@ -160,7 +160,7 @@ public class DataPersistence {
 		   con=(Connection) DriverManager.getConnection(url, username, password);
 		   
 		   statement=(PreparedStatement) con.prepareStatement(sql);
-
+		   statement.setString(1, content);
 		   ResultSet result=statement.executeQuery();
 		   if(result.next())
 			   return true;

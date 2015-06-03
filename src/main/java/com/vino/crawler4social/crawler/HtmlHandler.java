@@ -30,9 +30,7 @@ public class HtmlHandler {
 				href = "www.zhihu.com" + ele.child(1).attr("href");
 
 				DataPersistence dataPersistence = new DataPersistence();
-				if (!dataPersistence
-						.queryInDatabase("select id from social where content="
-								+ "'" + content + "'")) {
+				if (!dataPersistence.queryInDatabaseByContent(content)) {
 					dataPersistence.saveInDatabase("zhihu",
 							new Date().toString(), "vino", content, href);
 					log.info(content);
@@ -40,7 +38,7 @@ public class HtmlHandler {
 						DataPersistence.saveFile(saveDir + "log.txt",
 								(new Date()) + content);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
+
 						e.printStackTrace();
 					}
 				}
@@ -50,61 +48,52 @@ public class HtmlHandler {
 		}
 
 	}
-	//微博主页地址:http://weibo.cn/u/2360059850?page=3&vt=4&PHPSESSID=
+
+	// 微博主页地址:http://weibo.cn/u/2360059850?page=3&vt=4&PHPSESSID=
+	/**
+	 * 不能爬用来登录的账号的页面，因为url不对，返回的页面是不对的
+	 * @param html
+	 * @param lastContent
+	 * @param saveDir
+	 */
 	public static void weiboHandler(String html, List<String> lastContent,
 			String saveDir) {
 		log.info("处理微博");
 		if (html != null) {
 			Document document = Jsoup.parse(html);
 
-			Elements eles = document.select("div.c");//原创"span.ctt"
-		//	Elements cmts = document.select("span.cmt");// 转发
-			Elements pagelist=document.select("div#pagelist>form>div");
-			Elements timeAndDevice=document.select("span.ct");
+			Elements eles = document.select("div.c");// 微博内容
+
+			Elements pagelist = document.select("div#pagelist>form>div");// 页数
+			Elements timeAndDevice = document.select("span.ct");
+			Elements nickname = document.select("div.ut>span.ctt");
 			String content = null;
-			String href = null;
-		
 			DataPersistence dataPersistence = new DataPersistence();
-			String pagetext=pagelist.get(0).text().toString();
-			
-			String timeAndDeviceText=null;//微博发出时间和使用设备
-			String totalPage=pagetext.substring(pagetext.lastIndexOf("/")+1, pagetext.lastIndexOf("页"));			
-			log.info(totalPage);
+			String pagetext = pagelist.get(0).text().toString();
+			String timeAndDeviceText = null;// 微博发出时间和使用设备
+			String totalPage = pagetext.substring(
+					pagetext.lastIndexOf("/") + 1, pagetext.lastIndexOf("页"));
+			String nicknameText = nickname.get(0).text().toString();
+			// log.info(totalPage);
+			// log.info(nicknameText);
 			// 处理原创
-			for (int i=0;i<eles.size()-2;i++) {
+			for (int i = 0; i < eles.size() - 2; i++) {
 				content = eles.get(i).text();
-				timeAndDeviceText=timeAndDevice.get(i).text();
-				//href = "www.weibo.cn" + ele.child(1).attr("href");
-			//	dataPersistence.saveInDatabase("weibo",
-			//			new Date().toString(), "vino", content, href);
-				log.info(content);
-				log.info(timeAndDeviceText);
-					try {
-						DataPersistence.saveFile(saveDir + "log.txt",
-								(new Date()) + content);
-					} catch (IOException e) {
+				timeAndDeviceText = timeAndDevice.get(i).text();
+				if (!dataPersistence.queryInDatabaseByContent(content)) {
 
-						e.printStackTrace();
-					}
+					dataPersistence.saveInDatabase("weibo",
+							new Date().toString(), nicknameText, content, null);
+					log.info("更新一条状态：" + content);
 				}
+				try {
+					DataPersistence.saveFile(saveDir + "log.txt", (new Date())
+							+ content);
+				} catch (IOException e) {
 
-			
-	/*		// 处理转发
-			for (Element cmt : cmts) {
-				content = cmt.text();
-				if (!lastContent.contains(content)) {
-					lastContent.add(content);
-					log.info(content + "     ");
-					try {
-						DataPersistence.saveFile(saveDir + "log.txt",
-								(new Date()) + content);
-					} catch (IOException e) {
-
-						e.printStackTrace();
-					}
+					e.printStackTrace();
 				}
-
-			}*/
+			}
 
 		}
 	}
@@ -127,9 +116,7 @@ public class HtmlHandler {
 				nickname = ele.child(1).child(0).text();
 				log.info(nickname + href);
 				DataPersistence dataPersistence = new DataPersistence();
-				if (!dataPersistence
-						.queryInDatabase("select id from social where content="
-								+ "'" + content + "'")) {
+				if (!dataPersistence.queryInDatabaseByContent(content)) {
 					dataPersistence.saveInDatabase("jianshu",
 							new Date().toString(), nickname, content, href);
 					log.info(content + "     ");
@@ -146,26 +133,4 @@ public class HtmlHandler {
 		}
 	}
 
-	public static void doubanHandler(String html, List<String> lastContent,
-			String saveDir) {
-		if (html != null) {
-			Document document = Jsoup.parse(html);
-			System.out.println(html);
-			Elements eles = document.select("ul.timeline-content>li");
-
-			String content = null;
-			// 处理原创
-			/*
-			 * for (Element ele : eles) { content = ele.text(); if
-			 * (!lastContent.contains(content)) { lastContent.add(content);
-			 * log.info(content + "     "); try {
-			 * DataPersistence.saveFile(saveDir + "log.txt", (new Date()) +
-			 * content); } catch (IOException e) {
-			 * 
-			 * e.printStackTrace(); } }
-			 * 
-			 * }
-			 */
-		}
-	}
 }

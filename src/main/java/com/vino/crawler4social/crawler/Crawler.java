@@ -56,7 +56,7 @@ public class Crawler {
 				break;		
 			 case 2:
 				WeiboCrawler crawler=new WeiboCrawler();
-				html=crawler.getHtml();
+				html=crawler.getHtml(urls.get((urlIndex)));
 				HtmlHandler.weiboHandler(html,lastContent,saveDir);
 				break;			
 			default:

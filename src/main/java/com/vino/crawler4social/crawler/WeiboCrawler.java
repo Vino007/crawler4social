@@ -29,7 +29,7 @@ public class WeiboCrawler {
 
 	public WeiboCrawler() {
 		try {
-			cookie = WeiboLogin.getSinaCookie("540134090@qq.com", "Zhuoyue007");
+			cookie = WeiboLogin.getSinaCookie("yourmail@163.com", "yourpassword");
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -75,6 +75,7 @@ public class WeiboCrawler {
 		} finally {
 
 			try {
+				if(response!=null)
 				response.close();
 			} catch (IOException e) {
 
